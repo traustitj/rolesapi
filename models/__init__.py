@@ -3,8 +3,10 @@ class User:
     username = ""
     user_id = ""
     created = ""
+    roles = []
 
 class Role:
-    roleid = 0
+    role_id = 0
     name = ""
     permanent = False
+    users = []
