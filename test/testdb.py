@@ -18,7 +18,7 @@ class TestDatabase(unittest.TestCase):
 
     def test_role_exists(self):
         mydb = Database()
-        self.assertFalse(mydb.role_exists("developer"))
+        self.assertTrue(mydb.role_exists("developer"))
 
     
     def test_create_and_delete_role(self):
@@ -52,18 +52,17 @@ class TestDatabase(unittest.TestCase):
 
     def test_fail_to_delete_permanent_role(self):
         mydb = Database()
-        role = mydb.get_role("developer")
+        role = mydb.get_role_by_name("developer")
         self.assertIsNotNone(role)
         deleted = mydb.delete_role("development")
         self.assertFalse(deleted)
 
     def test_user_belongs_to_role(self):
         mydb = Database()
-        service = Service()
-        user = service.get_user(1)
+        user = mydb.get_user_by_id(1)
         role = mydb.get_role_by_name("developer")
         self.assertIsNotNone(user)
         self.assertIsNotNone(role)
 
-        exists = mydb.is_user_part_of_role(userid = user.userid, roleid=role.roleid)
-        self.assertTrue(exists)
+        exists = mydb.is_user_part_of_role(user_id = user.user_id, role_id=role.role_id)
+        self.assertFalse(exists)
