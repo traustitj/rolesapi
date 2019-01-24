@@ -8,7 +8,6 @@ class Database():
     PATH = os.path.join(os.path.dirname(__file__), 'database.sqlite')
     def __init__(self):
         self.connection = sqlite3.connect(self.PATH)
-        print(self.PATH)
 
     def test(self):
         cursor = self.connection.cursor()
