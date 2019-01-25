@@ -79,6 +79,7 @@ class TestService(unittest.TestCase):
 
     def test_add_same_role_to_user(self):
         service = Service()
+        ok = service.delete_role_by_name("double_agent")
         role = service.new_role("double_agent")
         user = service.get_user_by_id(1)
 
@@ -93,3 +94,21 @@ class TestService(unittest.TestCase):
 
         ok = service.delete_role_by_name("double_agent")
         self.assertTrue(ok)
+
+    def test_add_and_remove_user_from_role(self):
+        service = Service()
+        role = service.delete_role_by_name("developer007")
+        role = service.new_role("developer007")
+        user = service.get_user_by_id(1)
+
+        ok = service.add_user_to_role(user_id=user.user_id, role_id=role.role_id)
+        self.assertTrue(ok)
+        refreshed_role = service.get_role_by_name("developer007")
+        self.assertEqual(len(refreshed_role.users), 1)
+        ok = service.remove_user_from_role(user_id=user.user_id, role_id=role.role_id)
+        refreshed_role1 = service.get_role_by_name("developer007")
+        self.assertEqual(len(refreshed_role1.users), 0)
+
+        ok = service.delete_role_by_name("developer007")
+        self.assertTrue(ok)
+
