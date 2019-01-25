@@ -19,7 +19,7 @@ def get_user(userid):
     service = Service()
     user = service.get_user_by_id(userid)
     if user is None:
-        Response("User not found", 400)
+        return Response("User not found", 404)
     else:
         data = user.__dict__
         return json.dumps(data)
@@ -30,7 +30,6 @@ def new_role():
     if request.content_type == "application/json":
         role_name = request.get_json()
         role = service.new_role(role_name["name"])
-        print("role is : ", role_name)
         if role is None:
             return Response("Role already exists", 409)
         else:
