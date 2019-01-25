@@ -30,6 +30,7 @@ def new_role():
     if request.content_type == "application/json":
         role_name = request.get_json()
         role = service.new_role(role_name["name"])
+        print("role is : ", role_name)
         if role is None:
             return Response("Role already exists", 409)
         else:
@@ -44,7 +45,7 @@ def get_role_by_id(id):
     role = service.get_role_by_id(id)
     if role is None:
         return Response("Role not found", 404)
-    data = role.__dict__
+    data = role.to_dict()
 
     return json.dumps(data)
 
@@ -54,7 +55,7 @@ def get_role_by_name(name):
     role = service.get_role_by_name(name)
     if role is None:
         return Response("Role not found", 404)
-    data = role.__dict__
+    data = role.to_dict()
 
     return json.dumps(data)
 
@@ -80,6 +81,13 @@ def remove_user_from_role(user_id, role_id):
             return Response("Role not found", 404)
         data = role.to_dict()
         return json.dumps(data)
+
+@app.route('/remove_role/<role_id>', methods=["DELETE"])
+def remove_role(role_id):
+    service = Service()
+    service.delete_role_by_id(role_id)
+
+    return Response("", 200)
 
 if __name__=='__main__':
     app.run(debug=True)
