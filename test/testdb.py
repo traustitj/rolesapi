@@ -1,6 +1,7 @@
 import unittest
 import sys
 import os
+import time
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/..")
 
 from db.db import Database
@@ -15,11 +16,6 @@ class TestDatabase(unittest.TestCase):
     def test_test1(self):
         self.assertEqual(1, 1)
 
-    def test_thetest(self):
-        arr = self.mydb.test()
-
-        self.assertEqual(len(arr), 1)
-
     def test_get_user(self):
         user = self.mydb.get_user_by_id(1)
 
@@ -28,7 +24,6 @@ class TestDatabase(unittest.TestCase):
 
     def test_role_exists(self):
         self.assertTrue(self.mydb.role_exists("developer"))
-
     
     def test_create_and_delete_role(self):
         created = self.mydb.create_role("testing")
