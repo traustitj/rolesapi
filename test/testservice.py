@@ -2,7 +2,7 @@ import unittest
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/..")
-
+import time
 from db.db import Database
 from server_service import Service
 
@@ -117,3 +117,11 @@ class TestService(unittest.TestCase):
 
         role = self.myservice.get_role_by_name("deletebyid")
         self.assertIsNone(role)
+
+    def test_expired(self):
+        start = time.time()
+        still_valid = start + 600
+        expired_time = start - 600
+
+        self.assertFalse(self.myservice.is_expired(still_valid))
+        self.assertTrue(self.myservice.is_expired(expired_time))

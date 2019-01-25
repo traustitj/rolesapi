@@ -113,6 +113,16 @@ class Database():
 
         return True
 
+    def expire_user_by_id(self, user_id):
+        self.set_query("delete from users where userid=?", (user_id, ))
+        return True
+
+    def delete_user_by_id(self, user_id):
+        self.set_query("delete from users where userid=?", (user_id, ))
+        self.set_query("delete from user_roles where userid=?", (user_id, ))
+
+        return True
+
     def get_users_in_role(self, role_id):
         user_ids = self.get_query("select userid from user_roles where roleid=?", (role_id, ))
 

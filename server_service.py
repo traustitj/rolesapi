@@ -4,10 +4,12 @@ import requests
 from flask import request
 from flask import Response
 from models import User
+import time
 
 
 class Service:
     mydb = None
+    expire = 5 * 60
 
     def __init__(self):
         self.mydb = Database()
@@ -16,15 +18,34 @@ class Service:
         arr = self.mydb.get_roles()
         return json.dumps(arr)
 
-    def get_user_by_id(self, userid):
-        user = self.mydb.get_user_by_id(userid)
+    def get_user_by_id(self, user_id):
+        user = self.mydb.get_user_by_id(user_id)
         if not user is None:
-            return user
+            if self.is_expired(user.created + self.expire) == True:
+                self.expire_user_by_id(1)
+            else:
+                return user
         
-        returned = requests.get('http://tempo-test.herokuapp.com/7d1d085e-dbee-4483-aa29-ca033ccae1e4/1/user/%s/' % (userid))
-        user = json.loads(returned.text)
-        user = self.mydb.save_user(user)
-        return user
+        resp = requests.get('http://tempo-test.herokuapp.com/7d1d085e-dbee-4483-aa29-ca033ccae1e4/1/user/%s/' % (user_id))
+        if resp.status_code == 200:
+            user = json.loads(resp.text)
+            user = self.mydb.save_user(user)
+            return user
+        else:
+            self.delete_user(user_id)
+            return None
+
+    def is_expired(self, time_to_check):
+        right_now = time.time()
+        return (right_now > time_to_check)
+
+    def expire_user_by_id(self, user_id):
+        self.mydb.expire_user_by_id(user_id)
+        return True
+
+    def delete_user(self, user_id):
+        self.mydb.delete_user_by_id(user_id)
+        return True
 
     def get_role_by_id(self, role_id):
         return self.mydb.get_role_by_id(role_id)
