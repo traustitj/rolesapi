@@ -7,62 +7,67 @@ from db.db import Database
 from server_service import Service
 
 class TestDatabase(unittest.TestCase):
+    mydb = None
+
+    def setUp(self):
+        self.mydb = Database()
+
     def test_test1(self):
         self.assertEqual(1, 1)
 
     def test_thetest(self):
-        mydb = Database()
-        arr = mydb.test()
+        arr = self.mydb.test()
 
         self.assertEqual(len(arr), 1)
 
+    def test_get_user(self):
+        user = self.mydb.get_user_by_id(1)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(user.user_id, 1)
+
     def test_role_exists(self):
-        mydb = Database()
-        self.assertTrue(mydb.role_exists("developer"))
+        self.assertTrue(self.mydb.role_exists("developer"))
 
     
     def test_create_and_delete_role(self):
-        mydb = Database()
-        created = mydb.create_role("testing")
+        created = self.mydb.create_role("testing")
         self.assertIsNotNone(created)
         self.assertEqual(created.name, "TESTING")
 
-        deleted = mydb.delete_role("testing")
+        deleted = self.mydb.delete_role("testing")
         self.assertTrue(deleted)
 
     def test_create_similar_name_roles(self):
-        mydb = Database()
-        created = mydb.create_role("developer1")
+        created = self.mydb.create_role("developer1")
         self.assertIsNotNone(created)
-        created = mydb.create_role("developer11")
+        created = self.mydb.create_role("developer11")
         self.assertIsNotNone(created)
-        created = mydb.create_role("developer2")
+        created = self.mydb.create_role("developer2")
         self.assertIsNotNone(created)
-        created = mydb.create_role("developer22")
+        created = self.mydb.create_role("developer22")
         self.assertIsNotNone(created)
 
-        deleted = mydb.delete_role("developer1")
+        deleted = self.mydb.delete_role("developer1")
         self.assertTrue(deleted)
-        deleted = mydb.delete_role("developer11")
+        deleted = self.mydb.delete_role("developer11")
         self.assertTrue(deleted)
-        deleted = mydb.delete_role("developer2")
+        deleted = self.mydb.delete_role("developer2")
         self.assertTrue(deleted)
-        deleted = mydb.delete_role("developer22")
+        deleted = self.mydb.delete_role("developer22")
         self.assertTrue(deleted)
 
     def test_fail_to_delete_permanent_role(self):
-        mydb = Database()
-        role = mydb.get_role_by_name("developer")
+        role = self.mydb.get_role_by_name("developer")
         self.assertIsNotNone(role)
-        deleted = mydb.delete_role("development")
+        deleted = self.mydb.delete_role("development")
         self.assertFalse(deleted)
 
     def test_user_belongs_to_role(self):
-        mydb = Database()
-        user = mydb.get_user_by_id(1)
-        role = mydb.get_role_by_name("developer")
+        user = self.mydb.get_user_by_id(1)
+        role = self.mydb.get_role_by_name("developer")
         self.assertIsNotNone(user)
         self.assertIsNotNone(role)
 
-        exists = mydb.is_user_part_of_role(user_id = user.user_id, role_id=role.role_id)
+        exists = self.mydb.is_user_part_of_role(user_id = user.user_id, role_id=role.role_id)
         self.assertFalse(exists)
