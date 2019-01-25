@@ -28,6 +28,10 @@ class Service:
         mydb = Database()
         return mydb.get_role_by_id(role_id)
 
+    def get_role_by_name(self, name):
+        mydb = Database()
+        return mydb.get_role_by_name(name)
+
     def new_role(self, role_name):
         mydb = Database()
         return mydb.create_role(role_name)
@@ -44,7 +48,7 @@ class Service:
         if user == None or role == None:
             return False
 
-        if self.user_part_of_role(role.role_id):
+        if self.user_part_of_role(user_id=user.user_id, role_id=role.role_id):
             return True
 
         user = self.get_user_by_id(user_id)
@@ -54,6 +58,10 @@ class Service:
             return False
 
         return mydb.add_user_to_role(user_id, role_id)
+
+    def remove_user_from_role(self, user_id=0, role_id=0):
+        mydb = Database()
+        return mydb.remove_user_from_role(user_id=user_id, role_id=role_id)
 
     def user_part_of_role(self, user_id=0, role_id=0):
         mydb = Database()
