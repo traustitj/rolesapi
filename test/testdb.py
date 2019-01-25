@@ -35,7 +35,7 @@ class TestDatabase(unittest.TestCase):
         self.assertIsNotNone(created)
         self.assertEqual(created.name, "TESTING")
 
-        deleted = self.mydb.delete_role("testing")
+        deleted = self.mydb.delete_role_by_name("testing")
         self.assertTrue(deleted)
 
     def test_create_similar_name_roles(self):
@@ -48,19 +48,19 @@ class TestDatabase(unittest.TestCase):
         created = self.mydb.create_role("developer22")
         self.assertIsNotNone(created)
 
-        deleted = self.mydb.delete_role("developer1")
+        deleted = self.mydb.delete_role_by_name("developer1")
         self.assertTrue(deleted)
-        deleted = self.mydb.delete_role("developer11")
+        deleted = self.mydb.delete_role_by_name("developer11")
         self.assertTrue(deleted)
-        deleted = self.mydb.delete_role("developer2")
+        deleted = self.mydb.delete_role_by_name("developer2")
         self.assertTrue(deleted)
-        deleted = self.mydb.delete_role("developer22")
+        deleted = self.mydb.delete_role_by_name("developer22")
         self.assertTrue(deleted)
 
     def test_fail_to_delete_permanent_role(self):
         role = self.mydb.get_role_by_name("developer")
         self.assertIsNotNone(role)
-        deleted = self.mydb.delete_role("development")
+        deleted = self.mydb.delete_role_by_name("development")
         self.assertFalse(deleted)
 
     def test_user_belongs_to_role(self):
