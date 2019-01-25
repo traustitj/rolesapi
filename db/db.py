@@ -20,8 +20,14 @@ class Database():
         cursor.execute(query, parameters)
         self.connection.commit()
 
-    def test(self):
-        return self.get_query("select * from test", ())
+    def get_roles(self):
+        roles = self.get_query("select id, name, permanent from roles", ())
+        ret = []
+        for role in roles:
+            data = self._role_object(role)
+            ret.append(data.to_dict())
+
+        return ret
 
     def save_user(self, user):
         self.set_query('insert into users (userid, username, name, created) values (?, ?, ?, ?)', (user["id"], user["username"], user["name"], time.time()))
@@ -44,18 +50,27 @@ class Database():
         if self.role_exists(role_name):
             return None
         else:
-            self.get_query("insert into roles (name, permanent) values (?, ?)", (role_name.upper(), False))
+            self.set_query("insert into roles (name, permanent) values (?, ?)", (role_name.upper(), False))
             roles = self.get_query("select id, name, permanent from roles where name like upper(?)", (role_name, ))
 
             if (len(roles) > 0):
                 r = self._role_object(roles[0])
                 return r
 
-    def delete_role(self, role_name):
+    def delete_role_by_name(self, role_name):
         if self.role_exists(role_name):
             role = self.get_role_by_name(role_name)
             if role.permanent == False:
                 self.set_query("delete from roles where name like upper(?)", (role_name, ))
+                self.set_query("delete from user_roles where roleid=?", (role.role_id,))
+                return True
+        return False
+
+    def delete_role_by_id(self, role_id):
+        if self.role_id_exists(role_id):
+            role = self.get_role_by_id(role_id)
+            if role.permanent == False:
+                self.set_query("delete from roles where id=?", (role_id, ))
                 self.set_query("delete from user_roles where roleid=?", (role.role_id,))
                 return True
         return False
@@ -80,6 +95,11 @@ class Database():
 
     def role_exists(self, role_name):
         roles = self.get_query("select id, name, permanent from roles where name like upper(?)", (role_name, ))
+
+        return len(roles) > 0
+
+    def role_id_exists(self, role_id):
+        roles = self.get_query("select id, name, permanent from roles where id=?", (role_id, ))
 
         return len(roles) > 0
 
