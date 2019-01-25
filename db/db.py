@@ -128,6 +128,13 @@ class Database():
 
         return roles
 
+    def remove_user_from_role(self, user_id=0, role_id=0):
+        cursor = self.connection.cursor()
+        cursor.execute("delete from user_roles where userid=? and roleid=?", (user_id, role_id))
+        self.connection.commit()
+
+        return True
+
     def __del__(self):
         self.connection.close()
 
