@@ -13,7 +13,7 @@ class Service:
         self.mydb = Database()
         
     def index(self):
-        arr = self.mydb.test()
+        arr = self.mydb.get_roles()
         return json.dumps(arr)
 
     def get_user_by_id(self, userid):
@@ -36,7 +36,10 @@ class Service:
         return self.mydb.create_role(role_name)
 
     def delete_role_by_name(self, role_name):
-        return self.mydb.delete_role(role_name)
+        return self.mydb.delete_role_by_name(role_name)
+
+    def delete_role_by_id(self, role_id):
+        return self.mydb.delete_role_by_id(role_id)
 
     def add_user_to_role(self, user_id=0, role_id=0):
         user = self.mydb.get_user_by_id(user_id)
