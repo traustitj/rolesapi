@@ -5,6 +5,7 @@ RUN apt-get update
 RUN apt-get install -y python3 python-pip
 WORKDIR /work
 ADD server.py /work
+ADD setup.py /work
 ADD db /work
 ADD models /work
 ADD requirements .
