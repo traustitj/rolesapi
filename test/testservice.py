@@ -110,3 +110,10 @@ class TestService(unittest.TestCase):
         ok = self.myservice.delete_role_by_name("developer007")
         self.assertTrue(ok)
 
+    def test_delete_role_by_id(self):
+        role = self.myservice.new_role("deletebyid")
+        ok = self.myservice.delete_role_by_id(role.role_id)
+        self.assertTrue(ok)
+
+        role = self.myservice.get_role_by_name("deletebyid")
+        self.assertIsNone(role)
