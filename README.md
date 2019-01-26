@@ -34,10 +34,12 @@ The system can be run either in a virtual environment using python virtualenv co
 
     #### Docker
     The service is perfectly suited to run inside a docker image. Docker file is included in the project. An example command to build your image is like this
+
     * docker build -t roleapi .
     This will build your images. If you are familiar with docker, you might want to seperate the base python system and use that as a base image instead of ubuntu:18.04. You can also use smaller base images, make sure you have the tools you need to run the project.
 
     Example to run the service and export the port locally to 5000 is like this
+
     * docker run -d --name rolenode1 -p 5000:5000 roleapi
 
     This should have your service up and running.
@@ -46,7 +48,8 @@ The system can be run either in a virtual environment using python virtualenv co
 The system relies on user information from 3rd party server but will cache each user for 5 minutes and then refetch. All successful calls will give you back JSON data.
 
     * To fetch a user
-        * curl -X GET http://localhost:5000/user/1
+    
+    * curl -X GET http://localhost:5000/user/1
             This would fetch user with userid 1. Example output would be like
 
             {
@@ -56,8 +59,10 @@ The system relies on user information from 3rd party server but will cache each 
                 "roles": [],
                 "created": 1548497274.237531
             }
+    
     * To list all possible roles
-        * curl -X GET http://localhost:5000/
+    
+    * curl -X GET http://localhost:5000/
             The output would look like
             [
                 {
@@ -79,34 +84,44 @@ The system relies on user information from 3rd party server but will cache each 
                     "role_id": 3
                 }
             ]
+    
         These 3 ROLES are default roles and these roles can not be deleted
 
     * To add a role
+    
         * curl -X PUT -H "content-type: application/json" -d '{"name": "example"}' http://localhost:5000/role
-            The output would look like
-            {
-                "role_id": 30,
-                "name": "EXAMPLE",
-                "permanent": 0,
-                "users": []
-            }
+    
+        The output would look like
+
+        {
+            "role_id": 30,
+            "name": "EXAMPLE",
+            "permanent": 0,
+            "users": []
+        }
 
     * To add user to role (example uses userid 1 and role id 2)
+
         * curl -X GET http://localhost:5000/add_user_to_role/<userid>/<roleid>
         * i.e. curl -X GET http://localhost:5000/add_user_to_role/1/2
+
         The output would be all information on the role with the user added
 
     * To remove a user from a role
+
         * curl -X DELETE http://localhost:5000/remove_user_from_role/<userid>/<roleid>
         * i.e. curl -X DELETE http://localhost:5000/remove_user_from_role/1/2
+
         The output would reflect the current state of the group
 
     * To remove the role
+
         * curl -X DELETE http://localhost:5000/remove_role/<roleid>
         * i.e. curl -X DELETE http://localhost:5000/remove_role/2
 
 ## Improvements Todo
 There are a lot of improvements possible
+
 * Like make a config system with the path to the 3rd party service for users and a possibility to set the cache time value and change it while the system is running which would be useful to make sure the system fetches fresh set of users.
 * It is simple to change database, just overwrite the database object.
 * Investigate if perhaps Redis would not be better suited as a database for the system
