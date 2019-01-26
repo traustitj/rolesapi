@@ -13,7 +13,7 @@ Roles API is a system for maintaining role based access to systems. This can hel
 The system is made to run on Python 3.6 and tested as such.
 Once the system is downloaded, the maintainer needs to run the following commands (for Linux)
 * First run the python package manager, pip, to install required libraries. It is recommended to run the service either in Docker or Virtual environment (see #alternative-setup)
-    * pip install -e requirements
+    * pip install -r requirements
     * python setup.py
         * Beware that this command will delete all data from the database if it exists
     ### Now you can run the service
